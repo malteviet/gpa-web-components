@@ -1,26 +1,32 @@
 <script lang="ts">
+	import Adorner from './Adorner.svelte';
+
 	interface dragableObject {
 		name: string;
 		id: string;
 	}
 	const items: dragableObject[] = [
-		{ name: 'Item1', id: 'hallo' },
-		{ name: 'Item2', id: 'du' },
-		{ name: 'Item3', id: 'wir' },
-		{ name: 'Item4', id: 'sie' }
+		{ name: 'Item 1', id: 'hallo' },
+		{ name: 'Item 2', id: 'du' },
+		{ name: 'Item 3', id: 'wir' },
+		{ name: 'Item 4', id: 'sie' }
 	];
 
+	let draggedItem = $state<dragableObject>();
+	let adornerComponent = $state<Element>();
+
 	function handleDrag(event: DragEvent, item: dragableObject) {
+		draggedItem = item;
 		console.log(item.id);
-		// event.dataTransfer?.setData('text', item.id);
+
 		event.dataTransfer?.setData('text/plain', item.id);
-		const element: Element = document.getElementById('adorner') as Element;
-		element.innerHTML = item.name;
-		event.dataTransfer?.setDragImage(element, 0, 0);
+		event.dataTransfer?.setDragImage(adornerComponent!, 0, 0);
 	}
 </script>
 
-<p id="adorner"></p>
+<div>
+	<p bind:this={adornerComponent}>{draggedItem?.name ?? ''}</p>
+</div>
 <ul>
 	{#each items as item}
 		<li id={item.id} draggable="true" ondragstart={(event) => handleDrag(event, item)}>
@@ -34,5 +40,11 @@
 		background-color: aqua;
 		width: 200px;
 		cursor: pointer;
+	}
+
+	div > p {
+		position: absolute;
+		left: 100%;
+		background-color: violet;
 	}
 </style>
