@@ -12,7 +12,8 @@
 
 	function handleDrag(event: DragEvent, item: dragableObject) {
 		console.log(item.id);
-		event.dataTransfer?.setData('text', item.id);
+		// event.dataTransfer?.setData('text', item.id);
+		event.dataTransfer?.setData('text/plain', item.id);
 		const element: Element = document.getElementById('adorner') as Element;
 		element.innerHTML = item.name;
 		event.dataTransfer?.setDragImage(element, 0, 0);
