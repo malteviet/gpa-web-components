@@ -34,25 +34,25 @@
 
 	const fallbackItems: DraggableObject[] = [
 		{
-			name: 'call display module',
+			name: '[Dummy] call display module',
 			id: 'GIDS01DCIP-1.0.934.0-10',
 			urn: 'de.gira.schema.components.DcsIp.CallDisplayModule',
 			image: browserImage
 		},
 		{
-			name: 'call button single',
+			name: '[Dummy] call button single',
 			id: 'GIDS01DCIP-1.0.934.0-10',
 			urn: 'de.gira.schema.components.DcsIp.CallButtonModuleSingle',
 			image: cameraImage
 		},
 		{
-			name: 'call button double',
+			name: '[Dummy] call button double',
 			id: 'GIDS01DCIP-1.0.934.0-10',
 			urn: 'de.gira.schema.components.DcsIp.CallButtonModuleDouble',
 			image: photoImage
 		},
 		{
-			name: 'camera module',
+			name: '[Dummy] camera module',
 			id: 'GIDS01DCIP-1.0.934.0-10',
 			urn: 'de.gira.schema.components.DcsIp.CameraModule',
 			image: speakerImage
@@ -83,13 +83,13 @@
 	let component = $state<Component>();
 
 	$effect(() => {
-		Object.assign(window, { component });
+		Object.assign(window, { component, setEntries });
 	});
 
 	/** This method should be called from C#. */
 	function setEntries(json: string) {
-		if (component instanceof Component) {
-			component.items = createObjectsFromJson(json);
+		if (typeof component !== undefined) {
+			(component as Component).items = createObjectsFromJson(json);
 		} else {
 			console.log('The device library component is not initialized yet.');
 		}
