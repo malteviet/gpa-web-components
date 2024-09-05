@@ -9,14 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CefSharp.Wpf.NETCore" Version="127.3.50" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <None Include="..\build\**\*" CopyToOutputDirectory="PreserveNewest" LinkBase="embedded" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="embedded\index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="CefSharp.Wpf.NETCore" Version="127.3.50" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
   </ItemGroup>
 
+<!--  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">-->
+<!--    <Exec Command="cd ..&#xA;npm run build" />-->
+<!--  </Target>-->
 </Project>
