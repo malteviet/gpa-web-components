@@ -1,4 +1,6 @@
-﻿using CefSharp;
+﻿using System.Collections.ObjectModel;
+
+using CefSharp;
 using CefSharp.Wpf;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -13,6 +15,8 @@ public partial class MainWindowViewModel : ObservableObject
     {
         this._browser = browser;
     }
+
+    public ObservableCollection<Module> Items { get; } = new();
 
     [RelayCommand]
     private void OpenDevTools()
