@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
-using System.Security.Cryptography.Xml;
 using System.Windows;
 using CefSharp;
 using CefSharp.JavascriptBinding;
-using CefSharp.Wpf;
+using CefSharp.Wpf.HwndHost;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GongSolutions.Wpf.DragDrop;
@@ -16,7 +15,7 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
     private readonly ChromiumWebBrowser _browser;
 
     [ObservableProperty]
-    private string _address = $"{AppDefaults.LocalSchemeName}://{AppDefaults.LocalDomainName}";
+    private string _address = $"{AppDefaults.LocalSchemeName}://{AppDefaults.LocalDomainName}/device-lib.html";
     private readonly DeviceCatalogService _deviceCatalogService = new();
 
     public MainWindowViewModel(ChromiumWebBrowser browser)
@@ -60,10 +59,9 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
     }
 
     [RelayCommand]
-    private void Navigate(string address)
+    private async Task NavigateAsync(string address)
     {
-        _browser.Address = address;
-        _browser.BrowserCore.Reload();
+        await _browser.LoadUrlAsync(address);
     }
 
     [RelayCommand]
@@ -71,13 +69,13 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
     {
         var entries = _deviceCatalogService.EntriesAsJson();
         _browser.BrowserCore.ExecuteScriptAsync($"console.log(\"Test\")");
-        _browser.BrowserCore.ExecuteScriptAsync($"window.component.setEntries(\'{entries}\')");
+        _browser.BrowserCore.ExecuteScriptAsync($"window.setEntries(\'{entries}\')");
     }
 
     [RelayCommand]
-    private void DevPage()
+    private async Task DevPageAsync()
     {
-        Address = "http://localhost:5173/device-lib";
+        await _browser.LoadUrlAsync("http://localhost:5173/device-lib");
     }
 
     public void DragOver(IDropInfo dropInfo)
@@ -86,7 +84,7 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
         var urn = dataObject?.GetText();
         if (urn != null)
         {
-            dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
             dropInfo.Effects = DragDropEffects.Copy;
         }
     }
@@ -98,7 +96,7 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
         if (urn != null)
         {
             if (_deviceCatalogService.GetDeviceByUrn(urn) is { } device)
-                Items.Add(device);
+                Items.Insert(dropInfo.InsertIndex, device);
         }
     }
 }

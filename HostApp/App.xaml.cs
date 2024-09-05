@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using CefSharp;
 using CefSharp.SchemeHandler;
-using CefSharp.Wpf;
+using CefSharp.Wpf.HwndHost;
 
 namespace HostApp;
 
@@ -19,10 +19,7 @@ public partial class App
             {
                 SchemeName = AppDefaults.LocalSchemeName,
                 DomainName = AppDefaults.LocalDomainName,
-                SchemeHandlerFactory = new FolderSchemeHandlerFactory(
-                    "embedded",
-                    hostName: AppDefaults.LocalDomainName
-                )
+                SchemeHandlerFactory = new FolderSchemeHandlerFactory("embedded", hostName: AppDefaults.LocalDomainName)
             }
         );
 
