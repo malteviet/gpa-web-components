@@ -2,6 +2,9 @@
 	import Component from '../lib/Component.svelte';
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>gpa-web-components</h1>
+<p>
+	Welcome to <a href="https://github.com/beierle-krey/gpa-web-components">Drag & Drop</a> from html to
+	C#.
+</p>
 <Component />
