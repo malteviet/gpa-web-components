@@ -4,12 +4,29 @@
 	interface dragableObject {
 		name: string;
 		id: string;
+		urn: string;
 	}
 	const items: dragableObject[] = [
-		{ name: 'Item 1', id: 'hallo' },
-		{ name: 'Item 2', id: 'du' },
-		{ name: 'Item 3', id: 'wir' },
-		{ name: 'Item 4', id: 'sie' }
+		{
+			name: 'Item 1',
+			id: 'GIDS01DCIP-1.0.934.0-10',
+			urn: 'de.gira.schema.components.DcsIp.CallDisplayModule'
+		},
+		{
+			name: 'Item 2',
+			id: 'GIDS01DCIP-1.0.934.0-10',
+			urn: 'de.gira.schema.components.DcsIp.CallButtonModuleSingle'
+		},
+		{
+			name: 'Item 3',
+			id: 'GIDS01DCIP-1.0.934.0-10',
+			urn: 'de.gira.schema.components.DcsIp.CallButtonModuleDouble'
+		},
+		{
+			name: 'Item 4',
+			id: 'GIDS01DCIP-1.0.934.0-10',
+			urn: 'de.gira.schema.components.DcsIp.CameraModule'
+		}
 	];
 
 	let draggedItem = $state<dragableObject>();
@@ -19,7 +36,7 @@
 		draggedItem = item;
 		console.log(item.id);
 
-		event.dataTransfer?.setData('text/plain', item.id);
+		event.dataTransfer?.setData('text/plain', JSON.stringify(item));
 		event.dataTransfer?.setDragImage(adornerComponent!, 0, 0);
 	}
 </script>
