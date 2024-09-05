@@ -1,10 +1,13 @@
 ﻿using System.Collections.ObjectModel;
+using System.Security.Cryptography.Xml;
+using System.Windows;
 using CefSharp;
 using CefSharp.JavascriptBinding;
 using CefSharp.Wpf;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using GongSolutions.Wpf.DragDrop;
+using DataObject = System.Windows.DataObject;
 
 namespace HostApp;
 
@@ -68,7 +71,6 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
     {
         var entries = _deviceCatalogService.EntriesAsJson();
         _browser.BrowserCore.ExecuteScriptAsync($"console.log(\"Test\")");
-        _browser.BrowserCore.ExecuteScriptAsync($"console.log(window)");
         _browser.BrowserCore.ExecuteScriptAsync($"window.component.setEntries(\'{entries}\')");
     }
 
@@ -80,12 +82,23 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
 
     public void DragOver(IDropInfo dropInfo)
     {
-        //var xml = data.GetXml();
-        // TODO
+        var dataObject = dropInfo.Data as DataObject;
+        var urn = dataObject?.GetText();
+        if (urn != null)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Highlight;
+            dropInfo.Effects = DragDropEffects.Copy;
+        }
     }
 
     public void Drop(IDropInfo dropInfo)
     {
-        // TODO
+        var dataObject = dropInfo.Data as DataObject;
+        var urn = dataObject?.GetText();
+        if (urn != null)
+        {
+            if (_deviceCatalogService.GetDeviceByUrn(urn) is { } device)
+                Items.Add(device);
+        }
     }
 }

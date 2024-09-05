@@ -10,4 +10,9 @@ public class DeviceCatalogService
     {
         return JsonSerializer.Serialize(_repository.Devices, new JsonSerializerOptions(JsonSerializerDefaults.Web));
     }
+
+    public Device? GetDeviceByUrn(string deviceUrn)
+    {
+        return _repository.Devices.FirstOrDefault(x => x.Urn == deviceUrn);
+    }
 }
