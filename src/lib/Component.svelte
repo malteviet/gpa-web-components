@@ -1,12 +1,12 @@
 <script lang="ts">
 	import Adorner from './Adorner.svelte';
 
-	interface dragableObject {
+	interface draggableObject {
 		name: string;
 		id: string;
 		urn: string;
 	}
-	const items: dragableObject[] = [
+	const items: draggableObject[] = [
 		{
 			name: 'Item 1',
 			id: 'GIDS01DCIP-1.0.934.0-10',
@@ -29,10 +29,10 @@
 		}
 	];
 
-	let draggedItem = $state<dragableObject>();
+	let draggedItem = $state<draggableObject>();
 	let adornerComponent = $state<Element>();
 
-	function handleDrag(event: DragEvent, item: dragableObject) {
+	function handleDrag(event: DragEvent, item: draggableObject) {
 		draggedItem = item;
 		console.log(item.id);
 
