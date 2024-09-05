@@ -28,8 +28,26 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
                 repo.Register("catalogService", _deviceCatalogService);
             }
         };
-        //_browser.JavascriptObjectRepository.NameConverter = new CefSharp.JavascriptBinding.CamelCaseJavascriptNameConverter();
-        //_browser.JavascriptObjectRepository.Register("catalogService", _deviceCatalogService, options: BindingOptions.DefaultBinder);
+        //Wait for the page to finish loading (all resources will have been loaded, rendering is likely still happening)
+        browser.LoadingStateChanged += async (sender, args) =>
+        {
+            //Wait for the Page to finish loading
+            if (args.IsLoading == false)
+            {
+                await _browser.EvaluateScriptAsync($"window.setEntries(\"{_deviceCatalogService.Entries()}\")");
+            }
+        };
+
+        //Wait for the MainFrame to finish loading
+        browser.FrameLoadEnd += async (sender, args) =>
+        {
+            //Wait for the MainFrame to finish loading
+            if (args.Frame.IsMain)
+            {
+                await args.Frame.EvaluateScriptAsync($"window.setEntries(\"{_deviceCatalogService.Entries()}\")");
+                //args.Frame.ExecuteJavaScriptAsync("alert('MainFrame finished loading');");
+            }
+        };
     }
 
     public ObservableCollection<Device> Items { get; } = new();
@@ -56,7 +74,7 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
     {
         //var xml = data.GetXml();
         // TODO
-    }{"name":"call display module","id":"GIDS01DCIP-1.0.934.0-10","urn":"de.gira.schema.components.DcsIp.CallDisplayModule","imageKey":"browserImage"}
+    }
 
     public void Drop(IDropInfo dropInfo)
     {

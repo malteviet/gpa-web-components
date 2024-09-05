@@ -12,13 +12,31 @@
 		image: string;
 	}
 
-	interface CatalogEntry {
-		name: string;
-		id: string;
-		urn: string;
-		image: string;
+	//let items: draggableObject[] = $state([]);
+
+	// (async function() {
+	// 	console.log("I am here");
+	// 	CefSharp.BindObjectAsync("catalogService");
+	// 	const json = await catalogService.entries();
+	// 	console.log("json" + json);
+	// 	items = JSON.parse(json) as draggableObject[];
+	// })();
+	
+	async function loadData() {
+		console.log("I am here");
+		CefSharp.BindObjectAsync("catalogService");
+		const json = await catalogService.entries();
+		console.log("json" + json);
+		setEntries(json);
 	}
 
+	interface CatalogEntry {
+		id: string;
+		name: string;
+		urn: string;
+		image: string;
+
+	}
 	const imageDictionary = new Map<string, string>([
 		['browserImage', browserImage],
 		['cameraImage', cameraImage],
@@ -27,34 +45,33 @@
 	]);
 
 	const fallbackItems: DraggableObject[] = [
-		{
-			name: 'call display module',
-			id: 'GIDS01DCIP-1.0.934.0-10',
-			urn: 'de.gira.schema.components.DcsIp.CallDisplayModule',
-			image: browserImage
-		},
-		{
-			name: 'call button single',
-			id: 'GIDS01DCIP-1.0.934.0-10',
-			urn: 'de.gira.schema.components.DcsIp.CallButtonModuleSingle',
-			image: cameraImage
-		},
-		{
-			name: 'call button double',
-			id: 'GIDS01DCIP-1.0.934.0-10',
-			urn: 'de.gira.schema.components.DcsIp.CallButtonModuleDouble',
-			image: photoImage
-		},
-		{
-			name: 'camera module',
-			id: 'GIDS01DCIP-1.0.934.0-10',
-			urn: 'de.gira.schema.components.DcsIp.CameraModule',
-			image: speakerImage
-		}
+		// {
+		// 	name: 'call display module',
+		// 	id: 'GIDS01DCIP-1.0.934.0-10',
+		// 	urn: 'de.gira.schema.components.DcsIp.CallDisplayModule',
+		// 	image: browserImage
+		// },
+		// {
+		// 	name: 'call button single',
+		// 	id: 'GIDS01DCIP-1.0.934.0-10',
+		// 	urn: 'de.gira.schema.components.DcsIp.CallButtonModuleSingle',
+		// 	image: cameraImage
+		// },
+		// {
+		// 	name: 'call button double',
+		// 	id: 'GIDS01DCIP-1.0.934.0-10',
+		// 	urn: 'de.gira.schema.components.DcsIp.CallButtonModuleDouble',
+		// 	image: photoImage
+		// },
+		// {
+		// 	name: 'camera module',
+		// 	id: 'GIDS01DCIP-1.0.934.0-10',
+		// 	urn: 'de.gira.schema.components.DcsIp.CameraModule',
+		// 	image: speakerImage
+		// }
 	];
 
-	/** This method should be called from C#. */
-	export function setEntries(json: string): DraggableObject[] {
+	function createDraggableObjects(json: string): DraggableObject[] {
 		const result: DraggableObject[] = [];
 		for (const catalogEntry of JSON.parse(json) as CatalogEntry[]) {
 			const image: string = imageDictionary.has(catalogEntry.image)
@@ -70,11 +87,17 @@
 
 		return result;
 	}
-
+	
 	let items = $state<CatalogEntry[]>(fallbackItems);
 	let draggedItem = $state<CatalogEntry>();
 	let adornerComponent = $state<Element>();
 
+	/** This method should be called from C#. */
+	export function setEntries(json: string) {
+		console.log("setEntries called");
+		items = createDraggableObjects(json);
+	}
+	
 	function handleDrag(event: DragEvent, item: DraggableObject) {
 		draggedItem = item;
 		console.log(item.id);
@@ -87,7 +110,10 @@
 <div>
 	<p bind:this={adornerComponent}>{draggedItem?.name ?? ''}</p>
 </div>
-<ul>
+<button onclick="{() => loadData()}">
+	Load data
+</button>
+<ul> 
 	{#each items as item}
 		<li id={item.id} draggable="true" ondragstart={(event) => handleDrag(event, item)}>
 			<button>
@@ -103,7 +129,7 @@
 		font-family: Arial, Helvetica, sans-serif;
 	}
 
-	button {
+	li > button {
 		all: unset;
 		padding: 2px;
 		width: 100%;
