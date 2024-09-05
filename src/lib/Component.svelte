@@ -55,8 +55,10 @@
 <ul>
 	{#each items as item}
 		<li id={item.id} draggable="true" ondragstart={(event) => handleDrag(event, item)}>
-			<img src={item.image} alt={item.name} />
-			{item.name}
+			<button>
+				<img src={item.image} alt={item.name} />
+				{item.name}
+			</button>
 		</li>
 	{/each}
 </ul>
@@ -66,19 +68,47 @@
 		font-family: Arial, Helvetica, sans-serif;
 	}
 
+	button {
+		all: unset;
+		padding: 2px;
+		width: 100%;
+		height: 100%;
+	}
+
 	img {
 		width: 16px;
 		height: 16px;
-		margin: 4px 0px 0px 2px;
+	}
+
+	ul {
+		border: 1px darkgray solid;
+		padding: 0px;
+		margin: 0px;
+		width: 220px;
 	}
 
 	ul > li {
+		box-sizing: border-box;
+		display: flex;
 		list-style-type: none;
-		background-color: lightgray;
-		border: 1px darkgray solid;
-		margin: 2px;
-		width: 200px;
+		background-color: white;
+		border-bottom: 1px darkgray dotted;
+		width: 100%;
 		cursor: pointer;
+		align-items: center;
+		gap: 10px;
+	}
+
+	ul > li:hover,
+	ul > li > button:hover {
+		color: #bace00;
+		background-color: white;
+	}
+
+	ul > li:hover,
+	ul > li > button:focus-within {
+		color: black;
+		background-color: #bace00;
 	}
 
 	div > p {
