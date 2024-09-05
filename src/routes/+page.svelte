@@ -1,5 +1,19 @@
+<script lang="ts">
+	interface ComponentPage {
+		href: string;
+		name: string;
+	}
+
+	const pages: ComponentPage[] = [
+		{ href: './device-lib', name: 'Device Lib' },
+		{ href: './product-view', name: 'Product View' }
+	];
+</script>
+
 <ul>
-	<li>
-		<a href="./device-lib">Device Lib</a>
-	</li>
+	{#each pages as page}
+		<li>
+			<a href={page.href}>{page.name}</a>
+		</li>
+	{/each}
 </ul>
