@@ -45,6 +45,7 @@
                 OK
             </Button>
             <Button Command="{Binding DevPageCommand}">Open dev page</Button>
+            <Button Command="{Binding ExecuteScriptCommand}">Execute Script</Button>
         </ToolBar>
         <Border
             Background="White"

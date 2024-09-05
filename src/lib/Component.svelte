@@ -12,24 +12,6 @@
 		image: string;
 	}
 
-	//let items: draggableObject[] = $state([]);
-
-	// (async function() {
-	// 	console.log("I am here");
-	// 	CefSharp.BindObjectAsync("catalogService");
-	// 	const json = await catalogService.entries();
-	// 	console.log("json" + json);
-	// 	items = JSON.parse(json) as draggableObject[];
-	// })();
-	
-	async function loadData() {
-		console.log("I am here");
-		CefSharp.BindObjectAsync("catalogService");
-		const json = await catalogService.entries();
-		console.log("json" + json);
-		setEntries(json);
-	}
-
 	interface CatalogEntry {
 		id: string;
 		name: string;
@@ -102,7 +84,7 @@
 		draggedItem = item;
 		console.log(item.id);
 
-		event.dataTransfer?.setData('text/plain', JSON.stringify(item));
+		event.dataTransfer?.setData('text/plain', item.urn);
 		event.dataTransfer?.setDragImage(adornerComponent!, 0, 0);
 	}
 
@@ -116,9 +98,6 @@
 <div>
 	<p bind:this={adornerComponent}>{draggedItem?.name ?? ''}</p>
 </div>
-<button onclick="{() => loadData()}">
-	Load data
-</button>
 <ul>
 	{#each items as item (item.urn)}
 		<li id={item.id} draggable="true" ondragstart={(event) => handleDrag(event, item)}>

@@ -34,7 +34,9 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
             //Wait for the Page to finish loading
             if (args.IsLoading == false)
             {
-                await _browser.EvaluateScriptAsync($"window.setEntries(\"{_deviceCatalogService.Entries()}\")");
+                // _browser.BrowserCore.ExecuteScriptAsync($"console.log(\"Test\")");
+                // _browser.BrowserCore.ExecuteScriptAsync($"console.log(window)");
+                // _browser.BrowserCore.ExecuteScriptAsync($"window.component.setEntries({_deviceCatalogService.Entries()})");
             }
         };
 
@@ -42,11 +44,7 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
         browser.FrameLoadEnd += async (sender, args) =>
         {
             //Wait for the MainFrame to finish loading
-            if (args.Frame.IsMain)
-            {
-                await args.Frame.EvaluateScriptAsync($"window.setEntries(\"{_deviceCatalogService.Entries()}\")");
-                //args.Frame.ExecuteJavaScriptAsync("alert('MainFrame finished loading');");
-            }
+            if (args.Frame.IsMain) { }
         };
     }
 
@@ -62,12 +60,22 @@ public partial class MainWindowViewModel : ObservableObject, IDropTarget
     private void Navigate(string address)
     {
         _browser.Address = address;
+        _browser.BrowserCore.Reload();
+    }
+
+    [RelayCommand]
+    private void ExecuteScript()
+    {
+        var entries = _deviceCatalogService.EntriesAsJson();
+        _browser.BrowserCore.ExecuteScriptAsync($"console.log(\"Test\")");
+        _browser.BrowserCore.ExecuteScriptAsync($"console.log(window)");
+        _browser.BrowserCore.ExecuteScriptAsync($"window.component.setEntries(\'{entries}\')");
     }
 
     [RelayCommand]
     private void DevPage()
     {
-        Address = "http://localhost:5173";
+        Address = "http://localhost:5173/device-lib";
     }
 
     public void DragOver(IDropInfo dropInfo)
