@@ -82,15 +82,21 @@
 		event.dataTransfer?.setData('text/plain', JSON.stringify(item));
 		event.dataTransfer?.setDragImage(adornerComponent!, 0, 0);
 	}
+
+	let selectedItem = $state<DraggableObject>();
+
+	function onFocusHandler(item: DraggableObject) {
+		selectedItem = item;
+	}
 </script>
 
 <div>
 	<p bind:this={adornerComponent}>{draggedItem?.name ?? ''}</p>
 </div>
 <ul>
-	{#each items as item}
+	{#each items as item (item.urn)}
 		<li id={item.id} draggable="true" ondragstart={(event) => handleDrag(event, item)}>
-			<button>
+			<button onfocus={() => onFocusHandler(item)} class:selected={item.urn === selectedItem?.urn}>
 				<img src={item.image} alt={item.name} />
 				{item.name}
 			</button>
@@ -108,6 +114,10 @@
 		padding: 2px;
 		width: 100%;
 		height: 100%;
+	}
+
+	button.selected {
+		background-color: lightgray;
 	}
 
 	img {
