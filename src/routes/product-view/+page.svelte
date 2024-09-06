@@ -21,7 +21,7 @@
 </script>
 
 <div>
-	<ProductView {...selectedProduct} onSelect={(shapeId) => cefApi.onSelect(shapeId)} />
+	<ProductView {...selectedProduct} onSelect={(shapeId) => cefApi.selectShape(shapeId)} />
 </div>
 
 <style>

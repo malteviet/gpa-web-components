@@ -31,7 +31,7 @@ export type ProductId = keyof typeof products;
 // API
 
 export interface CefApi extends BaseCefApi {
-	onSelect: (shapeId: ShapeId) => void;
+	selectShape: (shapeId: ShapeId) => void;
 }
 
 export interface ComponentApi {
